@@ -1,48 +1,38 @@
-# Monify API
+# Monify App
 
-API REST de controle financeiro pessoal, implementada a partir do diagrama de classes do Monify e da arquitetura da `saaapi` (controller → DTO → service → repository → entity, ModelMapper, autenticação JWT).
+Front-end React do Monify. Consome a `monify_api` (Spring Boot).
 
-## Stack
-
-Java 17, Spring Boot 4.1.2, Spring Data JPA, Spring Security (JWT com jjwt 0.12), MySQL 8+, springdoc-openapi (Swagger), Lombok, ModelMapper.
+- **Base de código:** `saa-app` (componentes Card/FormGroup/toastr, padrão listagem + cadastro, axios).
+- **Estilização:** `FinanceTrack`, mantida de forma estrita: `custom.css`, `index.css`, `App.css`, `styles/home.css` e `styles/navbar.css` são cópias idênticas; mesmo tema (Bootswatch Pulse), fonte Lexend, Bootstrap Icons e mesma marcação/classes.
 
 ## Como executar
 
-1. Tenha um MySQL rodando (padrão: `localhost:3306`, usuário `root`, senha `root`). O banco `monify` e as tabelas são criados automaticamente na primeira execução.
-   Para sobrescrever: variáveis `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` e `JWT_SECRET`.
-2. `./mvnw spring-boot:run`
-3. Swagger: http://localhost:8080/swagger-ui.html
+1. Suba a API (`monify_api`) em `http://localhost:8080`.
+2. Nesta pasta:
 
-Testes (usam H2 em memória no modo de compatibilidade MySQL, sem precisar do servidor): `./mvnw test`
+```bash
+npm install
+npm start
+```
 
-## Autenticação
+3. Acesse http://localhost:3000, clique em **Cadastre-se** e faça login.
 
-1. `POST /api/v1/usuarios` com `login`, `cpf`, `senha`, `senhaRepeticao`, `admin`
-2. `POST /api/v1/usuarios/auth` com `login` e `senha` → devolve `token`
-3. Envie `Authorization: Bearer <token>` nas demais chamadas
+Para outra URL da API, defina `REACT_APP_API_URL` (ex.: `http://localhost:8081/api/v1`) antes do `npm start`.
+Para outra origem do front, ajuste `app.cors.origens` / `CORS_ORIGENS` na API.
 
-A resposta do `/auth` traz `login`, `token` e `admin`. O CORS é tratado no Spring Security e libera, por padrão, o front em `http://localhost:3000` (configurável em `app.cors.origens` / variável `CORS_ORIGENS`).
+## Telas
 
-## Endpoints
-
-| Recurso | Rota base | Extras |
+| Menu | Tela | Recursos da API |
 |---|---|---|
-| Receitas | `/api/v1/receitas` | |
-| Despesas | `/api/v1/despesas` | `GET /{id}/parcelas` |
-| Parcelas | `/api/v1/parcelas` | |
-| Formas de pagamento | `/api/v1/formaspagamento` | |
-| Categorias de receita | `/api/v1/categoriasreceita` | `GET /{id}/receitas` |
-| Categorias de despesa | `/api/v1/categoriasdespesa` | `GET /{id}/despesas` |
-| Metas financeiras | `/api/v1/metasfinanceiras` | `GET /{id}/aportes` |
-| Aportes | `/api/v1/aportes` | |
-| Usuários | `/api/v1/usuarios` | `POST /auth` |
+| Início | Saldo, entradas, saídas, parcelas a pagar, limites de gasto do mês, metas em andamento | todos |
+| Lançamentos | Receitas e despesas (filtro por tipo, mês e ano; parcelamento) | `/receitas`, `/despesas` |
+| Lançamentos | Categorias (com limite de gasto mensal) | `/categoriasreceita`, `/categoriasdespesa` |
+| Lançamentos | Formas de pagamento | `/formaspagamento` |
+| Objetivos | Metas (progresso e status calculado pela API) e aportes | `/metasfinanceiras`, `/aportes` |
+| Pagamentos | Parcelas pendentes/pagas, pagar parcela ou fatura do filtro | `/parcelas` |
+| Relatórios | Mensal (pizzas por categoria/forma, volume, aportes) e anual (mês a mês) | `/receitas`, `/despesas`, `/aportes` |
+| Usuários (admin) | Cadastro e manutenção de usuários | `/usuarios` |
 
-Todos os recursos têm `GET`, `GET /{id}`, `POST`, `PUT /{id}` e `DELETE /{id}`. Datas no formato ISO (`2026-11-11`).
+## Observação
 
-## Regras de negócio
-
-- **Despesa parcelada**: ao salvar com `parcelada = true` e `quantidadeParcelas = n` (Integer ≥ 2; no diagrama original é float, alterado por ser uma contagem), o sistema gera `n` parcelas (centavos de arredondamento na última). Alterar valor ou quantidade regera as parcelas, exceto se alguma já estiver paga.
-- **Limite de gasto**: se a categoria de despesa tem `limiteGasto = true`, a soma das despesas da categoria no mês não pode ultrapassar `valorLimite`.
-- **Meta financeira**: `status` é calculado automaticamente (`true` quando investimento inicial + aportes ≥ valor) e recalculado a cada aporte incluído, alterado ou excluído.
-- **Composições**: excluir uma despesa exclui suas parcelas; excluir uma meta exclui seus aportes.
-- Formas de pagamento e categorias em uso não podem ser excluídas.
+O diagrama de classes não relaciona lançamentos, metas e categorias a um usuário; por isso todos os usuários autenticados enxergam os mesmos dados.

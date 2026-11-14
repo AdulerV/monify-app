@@ -1,0 +1,15 @@
+{
+  "short_name": "Monify",
+  "name": "Monify - controle financeiro",
+  "icons": [
+    {
+      "src": "monify-icone.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#5c006b",
+  "background_color": "#4b0082"
+}
