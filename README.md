@@ -33,6 +33,6 @@ Para outra origem do front, ajuste `app.cors.origens` / `CORS_ORIGENS` na API.
 | Relatórios | Mensal (pizzas por categoria/forma, volume, aportes) e anual (mês a mês) | `/receitas`, `/despesas`, `/aportes` |
 | Usuários (admin) | Cadastro e manutenção de usuários | `/usuarios` |
 
-## Observação
+## Dados por usuário
 
-O diagrama de classes não relaciona lançamentos, metas e categorias a um usuário; por isso todos os usuários autenticados enxergam os mesmos dados.
+Cada usuário vê apenas os próprios lançamentos, categorias, formas de pagamento, metas, parcelas e aportes. O filtro é feito pela API a partir do token do login, então o front-end não precisa filtrar nada.

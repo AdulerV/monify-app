@@ -5,7 +5,7 @@ import Card from '../components/card';
 import '../styles/home.css';
 import { obterUsuarioLogado } from '../utils/usuarioLogado';
 import { mensagemErroApi } from '../components/toastr';
-import { formatarMoeda, filtrarPorPeriodo, somarValores, MESES, hojeIso, mesDe, anoDe } from '../utils/formatacao';
+import { formatarMoeda, filtrarPorPeriodo, somarValores, MESES, hojeIso, mesDe, anoDe, SITUACOES_META } from '../utils/formatacao';
 import slogan from '../assets/monify-slogan.svg';
 
 function Home() {
@@ -179,7 +179,12 @@ function Home() {
               metasEmAndamento.map((m) => (
                 <div key={m.id} className='mb-3'>
                   <div className='d-flex justify-content-between'>
-                    <strong>{m.nome}</strong>
+                    <strong>
+                      {m.nome}{' '}
+                      <span className={`badge ${SITUACOES_META[m.situacao]?.classe ?? 'bg-secondary'}`}>
+                        {SITUACOES_META[m.situacao]?.rotulo}
+                      </span>
+                    </strong>
                     <span>{formatarMoeda(m.investido)} de {formatarMoeda(m.valor)}</span>
                   </div>
                   <div className='progress'>

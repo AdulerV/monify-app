@@ -59,8 +59,9 @@ function CadastroLancamentos() {
       mensagemErro('Por favor, selecione uma Forma de Pagamento para a Despesa (*)');
       return;
     }
-    if (tipo === 'Despesa' && parcelada && !(Number(quantidadeParcelas) >= 2)) {
-      mensagemErro('Informe a quantidade de parcelas (mínimo 2).');
+    const qtdParcelas = Number(quantidadeParcelas);
+    if (tipo === 'Despesa' && parcelada && !(Number.isInteger(qtdParcelas) && qtdParcelas >= 2 && qtdParcelas <= 120)) {
+      mensagemErro('Informe a quantidade de parcelas (entre 2 e 120).');
       return;
     }
 
@@ -255,6 +256,7 @@ function CadastroLancamentos() {
                       <input
                         type='number'
                         min='2'
+                        max='120'
                         step='1'
                         id='inputParcelas'
                         value={quantidadeParcelas}

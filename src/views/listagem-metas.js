@@ -9,7 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Card from '../components/card';
 import { mensagemSucesso, mensagemErroApi } from '../components/toastr';
 import api from '../config/axios';
-import { formatarMoeda, formatarData, somarValores } from '../utils/formatacao';
+import { formatarMoeda, formatarData, somarValores, SITUACOES_META } from '../utils/formatacao';
 import '../custom.css';
 
 function ListagemMetas() {
@@ -129,13 +129,14 @@ function ListagemMetas() {
                     <th scope='col'>Data-Alvo</th>
                     <th scope='col'>Total Investido</th>
                     <th scope='col'>Progresso</th>
+                    <th scope='col'>Situação</th>
                     <th scope='col' style={{ width: '140px' }}>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {metasFiltradas.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className='text-center text-muted'>Nenhuma meta encontrada.</td>
+                      <td colSpan={8} className='text-center text-muted'>Nenhuma meta encontrada.</td>
                     </tr>
                   ) : (
                     metasFiltradas.map((dado) => {
@@ -165,6 +166,11 @@ function ListagemMetas() {
                                 {Math.round(percentual)}%
                               </div>
                             </div>
+                          </td>
+                          <td>
+                            <span className={`badge ${SITUACOES_META[dado.situacao]?.classe ?? 'bg-secondary'}`}>
+                              {SITUACOES_META[dado.situacao]?.rotulo ?? '—'}
+                            </span>
                           </td>
                           <td>
                             <Stack spacing={1} direction='row'>

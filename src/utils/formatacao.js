@@ -12,6 +12,16 @@ export const PALETA_CORES = [
   '#760690',
 ];
 
+// Situacao calculada pela API (MetaFinanceiraService.calcularSituacao)
+export const SITUACOES_META = {
+  NAO_INICIADA: { rotulo: 'Não iniciada', classe: 'bg-secondary' },
+  NO_PRAZO: { rotulo: 'No prazo', classe: 'bg-info' },
+  ATENCAO: { rotulo: 'Atenção', classe: 'bg-warning' },
+  EM_RISCO: { rotulo: 'Em risco', classe: 'bg-danger' },
+  ATRASADA: { rotulo: 'Atrasada', classe: 'bg-danger' },
+  CONCLUIDA: { rotulo: 'Concluída', classe: 'bg-success' },
+};
+
 export function formatarMoeda(valor) {
   return Number(valor || 0).toLocaleString('pt-BR', {
     style: 'currency',
